@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PerformancePro - Employee Rating & Analysis System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/script.js"></script>
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcomePage" class="welcome-container">
+        <div class="welcome-logo">
+            <i class="fas fa-star"></i>
+        </div>
+        <h1 class="welcome-title">PerformancePro</h1>
+        <p class="welcome-subtitle">Employee Rating & Analysis System</p>
+        <div class="welcome-loader"></div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1><i class="fas fa-star"></i> PerformancePro</h1>
+                <p>Employee Rating & Analysis System</p>
+            </div>
+            
+            <!-- Login/Signup Toggle -->
+            <div class="auth-toggle">
+                <button id="loginTab" class="auth-tab active" onclick="showLoginForm()">Login</button>
+                <button id="signupTab" class="auth-tab" onclick="showSignupForm()">Sign Up</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" class="form-control" required>
+                        <option value="">Select your role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="customer">Customer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" class="form-control" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupRole">Role</label>
+                    <select id="signupRole" class="form-control" required>
+                        <option value="">Select your role</option>
+                        <option value="admin">Administrator</option>
+                        <option value="customer">Customer</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-star"></i> PerformancePro</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard" id="dashboardNav">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-page="admin" id="adminNav" onclick="showAdminPasswordModal(event)">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+                <a href="#" class="nav-item" data-page="employees" id="employeesNav">
+                    <i class="fas fa-users"></i> Employees
+                </a>
+                <a href="#" class="nav-item" data-page="analytics" id="analyticsNav">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="#" class="nav-item" data-page="customer-ratings" id="customerRatingsNav">
+                    <i class="fas fa-star"></i> Customer Ratings
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-info">
+                    <span id="userName">Welcome, User</span>
+                    <div class="user-avatar" id="userAvatar">U</div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalEmployees">0</div>
+                                <div class="stat-label">Total Employees</div>
+                            </div>
+                            <div class="stat-icon primary">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="avgCustomerRating">0.0</div>
+                                <div class="stat-label">Avg Customer Rating</div>
+                            </div>
+                            <div class="stat-icon success">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalReviews">0</div>
+                                <div class="stat-label">Total Reviews</div>
+                            </div>
+                            <div class="stat-icon warning">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="topRated">0</div>
+                                <div class="stat-label">Top Rated (5★)</div>
+                            </div>
+                            <div class="stat-icon info">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Customer Rating Distribution</h3>
+                        <canvas id="ratingDistributionChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Monthly Customer Ratings</h3>
+                        <canvas id="monthlyRatingsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Content -->
+            <div id="adminContent" style="display: none;">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('employeeList')">Employee List</button>
+                    <button class="admin-tab" onclick="switchAdminTab('addEmployee')">Add Employee</button>
+                </div>
+
+                <!-- Employee List Tab -->
+                <div id="adminEmployeeList" class="admin-content active">
+                    <div class="employee-list">
+                        <div class="employee-list-header">
+                            <h2>Employee Management</h2>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchAdminEmployees" placeholder="Search employees...">
+                            </div>
+                        </div>
+                        <table class="employee-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>Customer Rating</th>
+                                    <th>Reviews</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminEmployeeTableBody">
+                                <!-- Employee rows will be dynamically added -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Employee Tab -->
+                <div id="adminAddEmployee" class="admin-content">
+                    <div class="add-employee-form">
+                        <h2>Add New Employee</h2>
+                        <form id="addEmployeeForm">
+                            <div class="form-group">
+                                <label for="employeeName">Full Name</label>
+                                <input type="text" id="employeeName" class="form-control" placeholder="Enter employee name" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="employeeDepartment">Department</label>
+                                    <select id="employeeDepartment" class="form-control" required>
+                                        <option value="">Select department</option>
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Sales">Sales</option>
+                                        <option value="HR">HR</option>
+                                        <option value="Finance">Finance</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeePosition">Position</label>
+                                    <input type="text" id="employeePosition" class="form-control" placeholder="Enter position" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeEmail">Email</label>
+                                <input type="email" id="employeeEmail" class="form-control" placeholder="Enter email address" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="employeePhone">Phone</label>
+                                    <input type="tel" id="employeePhone" class="form-control" placeholder="Enter phone number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeeJoinDate">Join Date</label>
+                                    <input type="date" id="employeeJoinDate" class="form-control" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Employee
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employees Content -->
+            <div id="employeesContent" style="display: none;">
+                <div class="employee-list">
+                    <div class="employee-list-header">
+                        <h2>Employee Directory</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchEmployees" placeholder="Search employees...">
+                        </div>
+                    </div>
+                    <table class="employee-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Position</th>
+                                <th>Customer Rating</th>
+                                <th>Reviews</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeTableBody">
+                            <!-- Employee rows will be dynamically added -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Content -->
+            <div id="analyticsContent" style="display: none;">
+                <div class="analytics-charts-grid">
+                    <div class="analytics-chart-card">
+                        <h3>Department Ratings</h3>
+                        <canvas id="deptRatingsChart"></canvas>
+                    </div>
+                    <div class="analytics-chart-card">
+                        <h3>Performance Trend</h3>
+                        <canvas id="performanceTrendChart"></canvas>
+                    </div>
+                    <div class="analytics-chart-card">
+                        <h3>Rating Categories</h3>
+                        <canvas id="ratingCategoriesChart"></canvas>
+                    </div>
+                    <div class="analytics-chart-card">
+                        <h3>Top Performers</h3>
+                        <canvas id="topPerformersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Ratings Content -->
+            <div id="customerRatingsContent" style="display: none;">
+                <div class="customer-rating-section">
+                    <div class="customer-rating-header">
+                        <h2>Customer Ratings</h2>
+                        <button class="btn btn-primary" id="rateEmployeeBtn" onclick="showRateEmployeeModal()">
+                            <i class="fas fa-plus"></i> Rate an Employee
+                        </button>
+                    </div>
+                    <div class="customer-rating-grid" id="customerRatingGrid">
+                        <!-- Employee rating cards will be dynamically added -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div id="adminPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Admin Access</h2>
+                <button class="close-btn" onclick="closeModal('adminPasswordModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="adminPasswordForm">
+                <div class="form-group">
+                    <label for="adminPassword">Enter Admin Password</label>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-unlock"></i> Access Admin Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rate Employee Modal -->
+    <div id="rateEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Rate an Employee</h2>
+                <button class="close-btn" onclick="closeModal('rateEmployeeModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="customerRatingForm">
+                <div class="form-group">
+                    <label for="rateEmployeeSelect">Select Employee</label>
+                    <select id="rateEmployeeSelect" class="form-control" required>
+                        <option value="">Choose an employee...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Rating</label>
+                    <div class="star-rating" id="customerStarRating">
+                        <i class="fas fa-star star" data-rating="1"></i>
+                        <i class="fas fa-star star" data-rating="2"></i>
+                        <i class="fas fa-star star" data-rating="3"></i>
+                        <i class="fas fa-star star" data-rating="4"></i>
+                        <i class="fas fa-star star" data-rating="5"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerName">Your Name</label>
+                    <input type="text" id="customerName" class="form-control" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerEmail">Your Email</label>
+                    <input type="email" id="customerEmail" class="form-control" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="customerComment">Comment (Optional)</label>
+                    <textarea id="customerComment" class="form-control" rows="3" placeholder="Share your experience..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Rating
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employee Details Modal -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Employee Details</h2>
+                <button class="close-btn" onclick="closeModal('employeeModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="employeeModalContent">
+                <!-- Employee details will be dynamically added -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+</body>
+</html>
